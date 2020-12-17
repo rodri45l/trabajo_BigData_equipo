@@ -971,9 +971,17 @@ anim_save("./imagenes/gf_month.gif", gf_temp_month)
 Analizamos ahora la evolución que han seguido las energias renovables. Estas tecnologías pretenden ser mas amigables con el medio ambiente, disminuyendo la contaminación a la vez que producen energia.
 
 En las principales economías mundiales (Estados Unidos, Europa y parte de Asia) no se han producido ningún avance o muy poco en este sentido, y que son los países mas subdesarrollados (América del Sur y la parte central de África) los que más proporción de energia renovable usan, sin embargo, conforme se han ido desarrollando han ido utilizando menos las energias renovables. Este es el caso de Brasil, quién además ha deforestado parte de su superficie.
+Si nos centramos en Europa podemos ver que ha habido cierto avance en los ultimos 15 años , aunque aún hay mucho por hacer.
 
 ### Mapa
+<div class = "centered">
 ![](./imagenes/map6.gif)
+</div>
+<div class = "centered">
+### Europa
+![](./imagenes/mapp.gif)
+</div>
+
 
 ### Código  
 ``` {r, eval= FALSE}
@@ -1038,7 +1046,7 @@ df_pwr5 <-df_pwr4 %>%   mutate(year = as.numeric(year)) %>%
   mutate(value = as.numeric(value))
 
 df_pwr5 <- inner_join(world, df_pwr5, by= c("sovereignt" = "sovereignt"))
-df_pwr6 
+#df_pwr6 
 names(df_pwr4)
 
 df_pwr9 <- df_pwr5 %>% select(sovereignt, year, value)
@@ -1051,6 +1059,28 @@ p <- ggplot() + geom_sf(data = df_pwr9, aes(fill = value)) +
 anim <- animate(p)
 
 anim_save("./imagenes/map6.gif", anim)
+
+
+#-----------------------
+df_pwr10 <- df_pwr5 %>% filter(continent == "Europe")
+
+
+i <- ggplot() + geom_sf(data = df_pwr10, aes(fill = value)) + 
+  labs(title = "Mapa Europa energias renovables 1990 - 2015",
+       caption = "Datos provenientes de World Bank") +
+  coord_sf(xlim = c(-35, 50), ylim = c(30, 80))+
+  scale_fill_viridis(direction = 1, label = scales::number,begin = 0, end = 0.9) +
+  transition_time(year) + labs(title = "Porcentaje de energia renovable por país", subtitle = "Año:{as.integer(frame_time)}"  ) 
+
+anim1 <- animate(i)
+
+anim_save("./imagenes/mapp.gif", anim1)
+
+
+
+
+
+
 
 ```
 
