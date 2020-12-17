@@ -249,16 +249,27 @@ df_co2_5 <-df_co2_4 %>% group_by(country)
  
    
   n_df_3 <- df_co2_4%>% group_by(country) %>% summarise(em_co2_pc=sum(em_co2_pc))%>% ungroup()  %>% arrange(desc(em_co2_pc))
-    
-   lf <- df_co2_5%>% filter(year >= 1980) %>% group_by(year) %>%
-  # The * 1 makes it possible to have non-integer ranks while sliding
+ 
+  lf <- df_co2_5%>% filter(year >= 1980)  %>% group_by(year) %>%
+  
   mutate(rank = rank(-total_co2),
          Value_rel = total_co2/total_co2[rank==1],
          Value_lbl = paste0(" ",round(total_co2/1e9))) %>%
   group_by(country) %>% 
   filter(rank <=15) %>%
   ungroup()
+  
+  lf$country <- recode(lf$country, 
+                          "UNITED STATES OF AMERICA"="USA",
+        "CHINA (MAINLAND)"="CHINA",
+        "FRANCE (INCLUDING MONACO)"="FRANCE",
+        "ITALY (INCLUDING SAN MARINO)"="ITALY",
+        "RUSSIAN FEDERATION" = "RUSSIA"
+        
+        )
    
+  
+
    
    staticplot = ggplot(lf, aes(rank, group = country, 
                 fill = as.factor(country), color = as.factor(country))) +
@@ -294,7 +305,7 @@ df_co2_5 <-df_co2_4 %>% group_by(country)
   labs(title = 'CO2 total : {closest_state}',  
        subtitle  =  "Top 15 países",
        caption  = "fuente: World Bank Data")
-   
+ 
   
    anim_save("./imagenes/anim.gif", anim)
   
