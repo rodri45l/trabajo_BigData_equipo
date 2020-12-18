@@ -982,6 +982,7 @@ Si nos centramos en Europa podemos ver que ha habido cierto avance en los ultimo
 ![](./imagenes/mapp.gif)
 </div>
 
+![](./imagenes/rplot3.jpeg)
 
 ### Código  
 ``` {r, eval= FALSE}
@@ -1062,7 +1063,7 @@ anim_save("./imagenes/map6.gif", anim)
 
 
 #-----------------------
-df_pwr10 <- df_pwr5 %>% filter(continent == "Europe")
+df_pwr10 <- df_pwr5 %>% filter(continent == "Europe") 
 
 
 i <- ggplot() + geom_sf(data = df_pwr10, aes(fill = value)) + 
@@ -1076,6 +1077,28 @@ anim1 <- animate(i)
 
 anim_save("./imagenes/mapp.gif", anim1)
 
+#-----------------------------------------------------------------
+
+df_pwr11 <- df_pwr10 %>% filter(year == 2015) %>% select(sovereignt, year, value)
+
+
+
+
+
+
+library(treemapify)
+
+ggplot(df_pwr11, aes(area = value, fill = value, label = sovereignt )) +
+  geom_treemap() +
+  geom_treemap_text(colour = "white", place = "centre",
+                    grow = FALSE) +
+  scale_fill_viridis_c(option = "D" , name = "", alpha = 0.8, begin = 0.3, end = 0.7, direction = 1,
+                       guide = guide_colorbar( title = "% Energia renovable", direction = "horizontal", barheight = unit(2, units = "mm"),
+                                               barwidth = unit(50, units = "mm"), draw.ulim = F,
+                                               title.position = 'top', title.hjust = 0.5, label.hjust = 0.5)) +
+  theme(legend.position = "bottom") + scale_x_continuous(labels=function(value){format(value, scientific = FALSE)}) +
+  labs(title = "Porcentaje de energías renovables por países") + theme(plot.title = element_text(hjust = 0.5)) +
+  theme(plot.subtitle = element_text(hjust = 0.5))
 
 
 
